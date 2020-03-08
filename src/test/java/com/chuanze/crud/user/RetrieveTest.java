@@ -2,7 +2,6 @@ package com.chuanze.crud.user;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
 import com.baomidou.mybatisplus.core.toolkit.StringUtils;
-import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.chuanze.crud.entity.UserEntity;
 import com.chuanze.crud.mapper.UserMapper;
 import org.junit.Test;
