@@ -1,6 +1,7 @@
 package com.chuanze.crud.user;
 
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.toolkit.StringUtils;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.chuanze.crud.entity.UserEntity;
 import com.chuanze.crud.mapper.UserMapper;
@@ -211,6 +212,138 @@ public class RetrieveTest {
                                 && !info.getColumn().equals("manager_id"));
         List<UserEntity> user = userMapper.selectList(queryWrapper);
         System.out.println(user);
+    }
+
+    /**
+     * 实体作为条件构造器
+     * 1. 跟 Wrapper 的条件互不干扰
+     * 2. @TableField(condition = SqlCondition.LIKE) 可以设置对于的比较逻辑
+     * 3. 也可以不通过预定好的 SqlCondition 来设置，可以直接仿写常量值
+     */
+    @Test
+    public void selectByWrapperEntity() {
+        UserEntity whereUser = new UserEntity();
+        whereUser.setName("刘红雨");
+        whereUser.setAge(32);
+        QueryWrapper<UserEntity> queryWrapper = new QueryWrapper<>(whereUser);
+        queryWrapper.like("name", "雨")
+                .lt("age", 40);
+        List<UserEntity> user = userMapper.selectList(queryWrapper);
+        System.out.println(user);
+    }
+
+    @Test
+    public void selectByWrapperAllEq() {
+        QueryWrapper<UserEntity> queryWrapper = new QueryWrapper<>();
+        Map<String, Object> params = new HashMap<>();
+        params.put("name", "王天风");
+        params.put("age", 25);
+        //queryWrapper.allEq(params,true); // 默认不忽略 null 值
+        // 如果查询的列名为 name 就不传入查询条件中
+        queryWrapper.allEq((k, v) -> !k.equals("name"), params);
+        List<UserEntity> user = userMapper.selectList(queryWrapper);
+        System.out.println(user);
+    }
+
+    /**
+     * 返回 List<Map<String,Object>>
+     */
+    @Test
+    public void selectByMaps1() {
+        QueryWrapper<UserEntity> queryWrapper = new QueryWrapper<>();
+        queryWrapper.like("name", "雨")
+                .lt("age", 40);
+        List<Map<String, Object>> user = userMapper.selectMaps(queryWrapper);
+        System.out.println(user);
+    }
+
+    /**
+     * 11、按照直属上级分组，查询每组的平均年龄、最大年龄、最小年龄。
+     * 并且只取年龄总和小于500的组。
+     * select avg(age) avg_age,min(age) min_age,max(age) max_age
+     * from user
+     * group by manager_id
+     * having sum(age) <500
+     */
+    @Test
+    public void selectByMaps2() {
+        QueryWrapper<UserEntity> queryWrapper = new QueryWrapper<>();
+        queryWrapper.select("avg(age) avg_age,min(age) min_age,max(age)")
+                .groupBy("manager_id")
+                .having("sum(age)<{0}", 500);
+        List<Map<String, Object>> user = userMapper.selectMaps(queryWrapper);
+        System.out.println(user);
+    }
+
+    /**
+     * 只返回第一列数据
+     * 注意：返回的 list 是 Object 类型
+     */
+    @Test
+    public void selectByWrapperObjs() {
+        QueryWrapper<UserEntity> queryWrapper = new QueryWrapper<>();
+        queryWrapper.select("id", "name")
+                .like("name", "雨")
+                .lt("age", 40);
+
+        List<Object> user = userMapper.selectObjs(queryWrapper);
+        System.out.println(user);
+    }
+
+    /**
+     * 返回查询的条数
+     * 1. 注意，如此查询就不能指定特定的列了
+     */
+    @Test
+    public void selectByWrapperCount() {
+        QueryWrapper<UserEntity> queryWrapper = new QueryWrapper<>();
+        queryWrapper
+                .like("name", "雨")
+                .lt("age", 40);
+
+        Integer count = userMapper.selectCount(queryWrapper);
+        System.out.println(count);
+    }
+
+    /**
+     * 只查询一条记录
+     * 注意：查询的结果必须是一条，或者没有。
+     */
+    @Test
+    public void selectByWrapperOne() {
+        QueryWrapper<UserEntity> queryWrapper = new QueryWrapper<>();
+        queryWrapper
+                .like("name", "刘红雨")
+                .lt("age", 40);
+
+        UserEntity user = userMapper.selectOne(queryWrapper);
+        System.out.println(user);
+    }
+
+    /**
+     * condition 如果条件为 true，才使用该条件
+     */
+    @Test
+    public void testCondition() {
+        String name = "王";
+        String eamil = "";
+        condition(name, eamil);
+    }
+
+    private void condition(String name, String email) {
+        QueryWrapper<UserEntity> queryWrapper = new QueryWrapper<>();
+        //if (StringUtils.isNotBlank(name)) {
+        //    queryWrapper.like("name", name);
+        //}
+        //
+        //if (StringUtils.isNotBlank(email)) {
+        //    queryWrapper.like("email", email);
+        //}
+        queryWrapper.like(StringUtils.isNotBlank(name), "name", name)
+                .like(StringUtils.isNotBlank(email), "email", email);
+
+        List<UserEntity> userList = userMapper.selectList(queryWrapper);
+        userList.forEach(System.out::println);
     }
 
 

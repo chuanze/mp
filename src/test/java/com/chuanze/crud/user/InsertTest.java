@@ -30,7 +30,7 @@ public class InsertTest {
      * 2. 主键生成规则设置不对，可以设置主键的 IdType 属性
      */
     @Test
-    @Transactional
+    @Transactional// 想在数据库查看到结果，得去掉该注解
     public void insertOne() {
         UserEntity user = new UserEntity();
         user.setName("刘明强");
@@ -48,7 +48,7 @@ public class InsertTest {
      * 3. 使用 @TableField(exist=false) 来实现
      */
     @Test
-    @Transactional
+    @Transactional//想在数据库查看到结果，得去掉该注解
     public void insertTwo() {
         UserEntity user = new UserEntity();
         user.setName("刘明强");
