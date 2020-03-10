@@ -1,7 +1,14 @@
 package com.chuanze.crud.mapper;
 
-import com.chuanze.crud.entity.UserEntity;
+import com.baomidou.mybatisplus.core.conditions.Wrapper;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
+import com.baomidou.mybatisplus.core.metadata.IPage;
+import com.baomidou.mybatisplus.core.toolkit.Constants;
+import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
+import com.chuanze.crud.entity.UserEntity;
+import org.apache.ibatis.annotations.Param;
+
+import java.util.List;
 
 /**
  * <p>
@@ -13,4 +20,8 @@ import com.baomidou.mybatisplus.core.mapper.BaseMapper;
  */
 public interface UserMapper extends BaseMapper<UserEntity> {
 
+    //@Select("select * from user ${ew.customSqlSegment}")
+    List<UserEntity> selectAll(@Param(Constants.WRAPPER)Wrapper<UserEntity> wrapper);
+
+    IPage<UserEntity> selectUserPage(Page<UserEntity> page, @Param(Constants.WRAPPER)Wrapper<UserEntity> wrapper);
 }

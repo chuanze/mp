@@ -16,5 +16,11 @@
     <sql id="Base_Column_List">
         id, name, age, email, manager_id, create_time
     </sql>
+    <select id="selectAll" resultType="com.chuanze.crud.entity.UserEntity">
+        select * from user ${ew.customSqlSegment}
+    </select>
+    <select id="selectUserPage" resultType="com.chuanze.crud.entity.UserEntity">
+         select * from user ${ew.customSqlSegment}
+    </select>
 
 </mapper>
