@@ -12,6 +12,9 @@ import org.springframework.test.context.junit4.SpringRunner;
 
 import java.util.List;
 
+/**
+ * 自定义 sql 实现
+ */
 @RunWith(SpringRunner.class)
 @SpringBootTest
 public class CustomTest {

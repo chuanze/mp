@@ -27,7 +27,7 @@ public class UserEntity extends Model<UserEntity> {
     /**
      * 主键
      */
-    @TableId(value = "id", type = IdType.AUTO)
+    @TableId(value = "id", type = IdType.NONE)
     private Long id;
 
     /**

@@ -2,8 +2,10 @@ package com.chuanze.crud.user;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
+import com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper;
 import com.baomidou.mybatisplus.core.toolkit.Wrappers;
 import com.baomidou.mybatisplus.extension.conditions.query.LambdaQueryChainWrapper;
+import com.baomidou.mybatisplus.extension.conditions.update.LambdaUpdateChainWrapper;
 import com.chuanze.crud.entity.UserEntity;
 import com.chuanze.crud.mapper.UserMapper;
 import org.junit.Test;
@@ -11,6 +13,7 @@ import org.junit.runner.RunWith;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.test.context.junit4.SpringRunner;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.List;
 
@@ -60,5 +63,46 @@ public class LambdaTest {
                 .ge(UserEntity::getAge, 20)
                 .list();
         userList.forEach(System.out::println);
+    }
+
+    /**
+     * Lambda 表达式修改方法
+     */
+    @Test
+    @Transactional// 想在数据库查看到结果，得去掉该注解
+    public void updateByLambda() {
+        LambdaUpdateWrapper<UserEntity> lambdaQueryWrapper = Wrappers.<UserEntity>lambdaUpdate();
+        lambdaQueryWrapper.eq(UserEntity::getName, "李艺伟")
+                .eq(UserEntity::getAge, 29)
+                .set(UserEntity::getAge, 30);
+        int rows = userMapper.update(null, lambdaQueryWrapper);
+        System.out.println("影响记录数" + rows);
+    }
+
+    /**
+     * 链式 lambda 表达式
+     */
+    @Test
+    @Transactional// 想在数据库查看到结果，得去掉该注解
+    public void updateByLambdaChin() {
+        boolean flag = new LambdaUpdateChainWrapper<UserEntity>(userMapper)
+                .eq(UserEntity::getName, "李艺伟")
+                .eq(UserEntity::getAge, 30)
+                .set(UserEntity::getAge, 31)
+                .update();
+        System.out.println("是否成功：" + flag);
+    }
+
+    @Test
+    @Transactional// 想在数据库查看到结果，得去掉该注解
+    public void deleteByLambda() {
+        // 如果传入实体，会作为查询条件
+        LambdaQueryWrapper<UserEntity> lambdaQuery = Wrappers.<UserEntity>lambdaQuery();
+        lambdaQuery.eq(UserEntity::getAge, 27)
+                .or()
+                .gt(UserEntity::getAge, 41);
+        int rows = userMapper.delete(lambdaQuery);
+        System.out.println("影响记录数" + rows);
+
     }
 }

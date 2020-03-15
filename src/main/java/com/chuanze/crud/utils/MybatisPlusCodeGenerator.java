@@ -106,6 +106,7 @@ public class MybatisPlusCodeGenerator {
         strategy.setInclude("user".split(","));
         strategy.setControllerMappingHyphenStyle(true);
         //strategy.setTablePrefix("tb_wind_");// 表名前缀
+        strategy.setEntityTableFieldAnnotationEnable(false); // 是否生成实体时，生成字段注解（命名不规则时候使用）
 
         mpg.setStrategy(strategy);
         //mpg.setTemplateEngine(new FreemarkerTemplateEngine());
