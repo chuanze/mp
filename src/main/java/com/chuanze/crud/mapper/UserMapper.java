@@ -7,6 +7,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import com.chuanze.crud.entity.UserEntity;
 import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import org.apache.ibatis.annotations.Param;
+import org.apache.ibatis.annotations.Select;
 
 import java.util.List;
 
@@ -24,4 +25,7 @@ public interface UserMapper extends BaseMapper<UserEntity> {
     List<UserEntity> selectAll(@Param(Constants.WRAPPER) Wrapper<UserEntity> wrapper);
 
     IPage<UserEntity> selectUserPage(Page<UserEntity> page, @Param(Constants.WRAPPER)Wrapper<UserEntity> wrapper);
+
+    @Select("select * from user ${ew.customSqlSegment}")
+    List<UserEntity> mySelectList(@Param(Constants.WRAPPER) Wrapper<UserEntity> wrapper);
 }

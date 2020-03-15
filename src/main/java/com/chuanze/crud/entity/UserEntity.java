@@ -69,6 +69,8 @@ public class UserEntity extends Model<UserEntity> {
     /**
      * 逻辑删除标识(0.未删除,1.已删除)
      */
+    @TableLogic
+    @TableField(select = false) // 查询时候不显示
     private Integer deleted;
 
 
