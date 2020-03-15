@@ -14,7 +14,7 @@ import lombok.experimental.Accessors;
  * </p>
  *
  * @author chuanze
- * @since 2020-03-08
+ * @since 2020-03-15
  */
 @Data
 @EqualsAndHashCode(callSuper = false)
@@ -55,6 +55,21 @@ public class UserEntity extends Model<UserEntity> {
      * 创建时间
      */
     private LocalDateTime createTime;
+
+    /**
+     * 修改时间
+     */
+    private LocalDateTime updateTime;
+
+    /**
+     * 版本
+     */
+    private Integer version;
+
+    /**
+     * 逻辑删除标识(0.未删除,1.已删除)
+     */
+    private Integer deleted;
 
 
     @Override
